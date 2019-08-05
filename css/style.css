@@ -1,0 +1,116 @@
+@import "normalize.css";
+
+/* * {
+    margin: 0;
+    padding: 0;
+};
+ */
+
+.container {
+  display: flex;
+}
+.container-1 {
+  display: flex;
+  justify-content: center;
+  justify-items: center;
+}
+.container-2 {
+  display: flex;
+  justify-content: center;
+}
+
+.container-3 {
+  display: flex;
+  justify-content: center;
+}
+
+.container-4 {
+  display: flex;
+  justify-content: center;
+}
+
+.container,
+.container-2,
+.container-3,
+.container-4, div {
+  border: 1px #ccc solid;
+  padding: 10px;
+}
+
+.pizzeria {
+  flex: 1;
+  order: 1;
+  flex-basis: 100%;
+  flex-flow: row-reverse;
+  text-align: center;
+}
+
+.name-1 {
+  padding: 10px;
+  width: 30%;
+  flex: 1;
+  order: 1;
+  text-align: center;
+}
+
+.name-2 {
+  padding: 10px;
+  width: 30%;
+  flex: 1;
+  order: 2;
+  text-align: center;
+}
+
+.name-3 {
+  padding: 10px;
+  width: 30%;
+  flex: 1;
+  order: 3;
+  text-align: center;
+}
+
+.shef {
+  height: 40px;
+  flex: 1;
+  margin: 10px;
+  width: 40px;
+  order: 1;
+  background-color: burlywood;
+  border: 1px solid;
+  border-radius: 50%;
+}
+
+.screen-1 {
+  padding: 10px;
+  width: 30%;
+  flex: 1;
+  order: 1;
+  justify-items: left;
+}
+
+.screen-2 {
+  padding: 10px;
+  width: 30%;
+  flex: 1;
+  order: 2;
+}
+
+.screen-3 {
+  padding: 10px;
+  width: 30%;
+  flex: 1;
+  order: 3;
+  justify-content: left;
+}
+
+.container h1 {
+  flex: 1;
+}
+
+.container-2 h2 {
+  flex: 1;
+}
+
+.btn {
+  flex: 1;
+}
