@@ -1,6 +1,7 @@
 "use strict";
 
 window.onload =  function() {
+  
   const body = document.body;
   const container = createElementInDom("container");
   const container1 = createElementInDom("div", "", "container-1");
@@ -38,6 +39,13 @@ window.onload =  function() {
   container4.appendChild(screen1);
   container4.appendChild(screen2);
   container4.appendChild(screen3);
+
+  buttonIncrement.addEventListener("click", addCook
+  );
+  console.log(COOKS_ORDER);
+
+   buttonDecrement.addEventListener("click",  deleteCook);
+
 }
 
 
@@ -52,6 +60,8 @@ function createElementInDom(name = "div", text = "", classElName = "") {
 
 // CONTAINERS \\
 const CLIENTS_ORDERS = [];
+const COOKS_ORDER = [];
+
 const COOKING_ORDERS = [];
 const DONE_ORDERS = [];
 const firstNames = [
@@ -121,11 +131,29 @@ const INGREDIENTS = [
 // // // INGREDIENTS \\ \\ \\
 
 // /// The COOK \\\ \\
+
+function addCook() {
+  COOKS_ORDER.push(new CookGenerator());
+  if (COOKS_ORDER.length > 1) {
+    COOKS_ORDER[COOKS_ORDER.length - 1].on("cookIsFree", onCookFunction)
+  };
+  console.log(COOKS_ORDER.length);  
+}
+
+
+function deleteCook() {
+  COOKS_ORDER.forEach((cook) => {
+    if(cook.isFree === true){
+      COOKS_ORDER.pop();
+    }
+  });
+  console.log(COOKS_ORDER.length);
+}
+
 function Cook(id, fullName) {
   this.id = id;
   this.fullName = fullName;
   this.order = [];
-
   this.isFree = true;
 
   this.cookingTime = function() {
@@ -139,8 +167,10 @@ function Cook(id, fullName) {
 
 const theCook = new Cook();
 const CookGenerator = inherit(EventEmmiter, theCook);
-const newCook = new CookGenerator();
-newCook.on("cookIsFree", onCookFunction);
+
+
+
+
 
 // // // COOK END \\ \\ \\
 
@@ -157,8 +187,8 @@ function Client(id, order, fullName) {
 //  BOB \\
 
 const client = new Client();
-
 const ClientGenerator = inherit(EventEmmiter, client);
+
 
 setTimeout(function addClients() {
   CLIENTS_ORDERS.push(
@@ -171,10 +201,10 @@ setTimeout(function addClients() {
   inDomClient();
   console.log(CLIENTS_ORDERS);
   console.log(DONE_ORDERS);
-  CLIENTS_ORDERS[CLIENTS_ORDERS.length - 1].on(
+  console.log(CLIENTS_ORDERS[CLIENTS_ORDERS.length - 1].on(
     "orderHandler",
     onClientFunction
-  );
+  ));
 
   CLIENTS_ORDERS[0].emit("orderHandler");
   setTimeout(addClients, randomInteger(2, 7) * 1000);
@@ -188,34 +218,42 @@ console.log(CLIENTS_ORDERS);
 // onClientFunction \\
 
 function onClientFunction() {
-  if (newCook.isFree === true) {
-    newCook.id = CLIENTS_ORDERS[0].id;
-    newCook.order = CLIENTS_ORDERS[0].order;
-    newCook.fullName = CLIENTS_ORDERS[0].fullName;
-    newCook.isFree = false;
+  if (COOKS_ORDER.length !== 0) {
 
-    COOKING_ORDERS.push(CLIENTS_ORDERS.shift());
-    inDomClient();
-    inDomCooking();
-    console.log(COOKING_ORDERS[0].id);
+    for (let i = 0; i < COOKS_ORDER.length; i++) {
+      if (COOKS_ORDER[i].isFree === true && CLIENTS_ORDERS.length > 1){
 
-    setTimeout(() => {
-      newCook.emit("cookIsFree");
-    }, newCook.cookingTime());
+        COOKS_ORDER[i].id = CLIENTS_ORDERS[0].id;
+        COOKS_ORDER[i].order = CLIENTS_ORDERS[0].order;
+        COOKS_ORDER[i].fullName = CLIENTS_ORDERS[0].fullName;
+        COOKS_ORDER[i].isFree = false;
+
+        COOKING_ORDERS.push(CLIENTS_ORDERS.shift());
+        inDomClient();
+        inDomCooking();
+        console.log(COOKING_ORDERS[0].id);
+  
+        setTimeout(() => {
+          COOKS_ORDER[i].emit("cookIsFree", i);
+        }, COOKS_ORDER[i].cookingTime());
+      }
+    }
   }
 }
+
 
 // onClientFunction End\\
 
 // onCookFunction \\
 
-function onCookFunction() {
-  newCook.isFree = true;
+function onCookFunction(cookIndex) {
+  COOKS_ORDER[cookIndex].isFree = true;
   DONE_ORDERS.push(COOKING_ORDERS.shift());
   returnDoneClient(
     DONE_ORDERS[DONE_ORDERS.length - 1].id,
     DONE_ORDERS[DONE_ORDERS.length - 1].fullName,
   );
+
   // deleteClientFromDone();
   inDomDone();
   console.log(
@@ -363,6 +401,9 @@ function returnDoneClient(id, fullName) {
   }
 }
 //END FUNCTION DONE CLIENT \\
+
+
+
 
 
 
