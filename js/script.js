@@ -17,10 +17,9 @@ window.onload =  function() {
   const screen1 = createElementInDom("div", "", "screen-1");
   const screen2 = createElementInDom("div", "", "screen-2");
   const screen3 = createElementInDom("div", "", "screen-3");
-  const buttonIncrement = createElementInDom("button", "+", "btn")
-  const buttonDecrement = createElementInDom("button", "-", "btn")
+  const buttonIncrement = createElementInDom("button", "+", "btn");
+  const buttonDecrement = createElementInDom("button", "-", "btn");
 
- 
   body.appendChild(container);
   body.appendChild(container1);
   body.appendChild(container2);
@@ -34,19 +33,13 @@ window.onload =  function() {
   container1.appendChild(name3);
   container2.appendChild(buttonIncrement);
   container2.appendChild(container3);
-
   container2.appendChild(buttonDecrement);
   container4.appendChild(screen1);
   container4.appendChild(screen2);
   container4.appendChild(screen3);
 
-  buttonIncrement.addEventListener("click", addCook
-  );
-
-  console.log(COOKS_ORDER);
-
+  buttonIncrement.addEventListener("click", addCook);
    buttonDecrement.addEventListener("click",  deleteCook);
-
 }
 
 function createShefBox() {
@@ -61,7 +54,6 @@ function removeShefBox() {
   let shefQue = body.getElementsByClassName("shefbox");
   if (shefQue.length >= 1) {
     shefQue[shefQue.length - 1].remove(); 
-    checkingShefs(); 
   }
 }
 
@@ -69,10 +61,8 @@ function createElementInDom(name = "div", text = "", classElName = "") {
   const elem = document.createElement(name);
   elem.textContent = text;
   elem.className = classElName;
-
   return elem;
 }
-
 
 // CONTAINERS \\
 const CLIENTS_ORDERS = [];
@@ -146,8 +136,6 @@ const INGREDIENTS = [
 // // // INGREDIENTS \\ \\ \\
 
 // /// The COOK \\\ \\
-
-
 function addCook() {
   if (COOKS_ORDER.length < 6){
     COOKS_ORDER.push(new CookGenerator());
@@ -156,7 +144,6 @@ function addCook() {
     createShefBox();
   }
 }
-
 
 function deleteCook() {
   if (COOKS_ORDER .length >= 1 && COOKS_ORDER[COOKS_ORDER.length - 1].isFree === true){
@@ -171,7 +158,6 @@ function Cook(id, fullName) {
   this.fullName = fullName;
   this.order = [];
   this.isFree = true;
-
   this.cookingTime = function() {
     let TotalaReadinessTime = this.order.reduce(
       (sum, ingredient) => sum + ingredient.readinessTime,
@@ -180,24 +166,17 @@ function Cook(id, fullName) {
     return TotalaReadinessTime;
   };
 }
-
 const theCook = new Cook();
 const CookGenerator = inherit(EventEmmiter, theCook);
-
-
 // // // COOK END \\ \\ \\
 
 // Clinents \\
-
 function Client(id, order, fullName) {
   this.id = id;
   this.order = order;
   this.fullName = fullName;
 }
-
 // Clinents END\\
-
-//  BOB \\
 
 const client = new Client();
 const ClientGenerator = inherit(EventEmmiter, client);
@@ -212,55 +191,37 @@ setTimeout(function addClients() {
     )
   );
   inDomClient();
-  console.log(CLIENTS_ORDERS);
-  console.log(DONE_ORDERS);
-  console.log(CLIENTS_ORDERS[CLIENTS_ORDERS.length - 1].on(
+  CLIENTS_ORDERS[CLIENTS_ORDERS.length - 1].on(
     "orderHandler",
     onClientFunction
-  ));
+  );
 
   CLIENTS_ORDERS[0].emit("orderHandler");
   setTimeout(addClients, randomInteger(2, 7) * 1000);
 }, randomInteger(2, 7) * 1000);
 
-console.log(CLIENTS_ORDERS);
-// console.log(realBob);
-
-//  BOB  END\\
-
 // onClientFunction \\
-
 function onClientFunction() {
   if (COOKS_ORDER.length !== 0) {
-
     for (let i = 0; i < COOKS_ORDER.length; i++) {
       if (COOKS_ORDER[i].isFree === true && CLIENTS_ORDERS.length >= 1){
-
         COOKS_ORDER[i].id = CLIENTS_ORDERS[0].id;
         COOKS_ORDER[i].order = CLIENTS_ORDERS[0].order;
         COOKS_ORDER[i].fullName = CLIENTS_ORDERS[0].fullName;
         COOKS_ORDER[i].isFree = false;
-
         COOKING_ORDERS.push(CLIENTS_ORDERS.shift());
         inDomClient();
-        inDomCooking();
-        console.log(COOKING_ORDERS[0].id);
-        
+        inDomCooking();       
         setTimeout(() => {
           COOKS_ORDER[i].emit("cookIsFree", i);
         }, COOKS_ORDER[i].cookingTime());
-
-
       }
     }
   }
 }
-
-
 // onClientFunction End\\
 
 // onCookFunction \\
-
 function onCookFunction(cookIndex) {
   COOKS_ORDER[cookIndex].isFree = true;
   DONE_ORDERS.push(COOKING_ORDERS.shift());
@@ -268,19 +229,16 @@ function onCookFunction(cookIndex) {
     DONE_ORDERS[DONE_ORDERS.length - 1].id,
     DONE_ORDERS[DONE_ORDERS.length - 1].fullName,
   );
-
-  // deleteClientFromDone();
   inDomDone();
   console.log(
     `The order ${DONE_ORDERS[DONE_ORDERS.length - 1].fullName} is ready`
   );
-
   if (CLIENTS_ORDERS.length >= 1) {
     CLIENTS_ORDERS[0].emit("orderHandler");
   }
 }
-
 // onCookFunction End\\
+
 
 // INHERIT FUNCTION \\
 function inherit(parentObj, data) {
@@ -290,17 +248,13 @@ function inherit(parentObj, data) {
     parentObj.apply(this);
     constructor.apply(this, arguments);
   };
-
   clientObj.prototype = Object.create(parentObj.prototype);
   clientObj.prototype.constructor = clientObj;
-
   for (let key in prototype) {
     clientObj.prototype[key] = prototype[key];
   }
-
   return clientObj;
 }
-
 // INHERIT FUNCTION END \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 //  EVENT EMMITER \\
@@ -328,11 +282,9 @@ function EventEmmiter() {
     }
   };
 }
-
 //  EVENT EMMITER \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 // Generating Id Function\\\\\\\\\\
-
 function generateId() {
   return (
     "_" +
@@ -342,9 +294,9 @@ function generateId() {
     "_"
   );
 }
-
 // End of the Generating Func\\\\\\\\
  
+// GenerateName \\
 function generateName() {
   return (
     "_" +
@@ -354,15 +306,14 @@ function generateName() {
     "_"
   );
 }
+// END GenerateName \\
 
 // Function randomInteger \\
-
 function randomInteger(min, max) {
   let random = Math.floor(min + Math.random() * (max - min) + 1);
   return random;
 }
-
-// End of function \\
+// End Function randomInteger \\
 
 // Generating ORDER Function\\\\\\\\\\
 function generatingOrder(INGREDIENTS) {
@@ -374,7 +325,6 @@ function generatingOrder(INGREDIENTS) {
 
   return newOrder;
 }
-
 // End of generated ORDER\\\\\\\
 
 
