@@ -65,19 +65,6 @@ function removeShefBox() {
   }
 }
 
-function checkingShefs() {
-  let body = document.body;
-  let shefQue = body.getElementsByClassName("shefbox");
-  for (let i = 0; i < COOKS_ORDER.length; i++){
-    for(let j = 0; j < shefQue.length; j++) {
-      if(COOKS_ORDER.length === shefQue.length) {
-        return [...shefQue];
-      } 
-    }
-  }
-}
-
-
 function createElementInDom(name = "div", text = "", classElName = "") {
   const elem = document.createElement(name);
   elem.textContent = text;
