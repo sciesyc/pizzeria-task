@@ -13,7 +13,7 @@ window.onload =  function() {
   const name1 = createElementInDom("div", "Clients Que", "name-1");
   const name2 = createElementInDom("div", "Orders Are Cooking", "name-2");
   const name3 = createElementInDom("div", "Orders are Made", "name-3");
-  const shefBox = createElementInDom("div", "", "shef");
+  
   const screen1 = createElementInDom("div", "", "screen-1");
   const screen2 = createElementInDom("div", "", "screen-2");
   const screen3 = createElementInDom("div", "", "screen-3");
@@ -34,7 +34,7 @@ window.onload =  function() {
   container1.appendChild(name3);
   container2.appendChild(buttonIncrement);
   container2.appendChild(container3);
-  container3.appendChild(shefBox);
+
   container2.appendChild(buttonDecrement);
   container4.appendChild(screen1);
   container4.appendChild(screen2);
@@ -42,10 +42,39 @@ window.onload =  function() {
 
   buttonIncrement.addEventListener("click", addCook
   );
+
   console.log(COOKS_ORDER);
 
    buttonDecrement.addEventListener("click",  deleteCook);
 
+}
+
+function createShefBox() {
+  let body = document.body;
+  let container3 = body.querySelector(".container-3");
+  const shefBox = createElementInDom("div", "", "shefbox");
+  container3.appendChild(shefBox);
+}
+
+function removeShefBox() {
+  let body = document.body;
+  let shefQue = body.getElementsByClassName("shefbox");
+  if (shefQue.length >= 1) {
+    shefQue[shefQue.length - 1].remove(); 
+    checkingShefs(); 
+  }
+}
+
+function checkingShefs() {
+  let body = document.body;
+  let shefQue = body.getElementsByClassName("shefbox");
+  for (let i = 0; i < COOKS_ORDER.length; i++){
+    for(let j = 0; j < shefQue.length; j++) {
+      if(COOKS_ORDER.length === shefQue.length) {
+        return [...shefQue];
+      } 
+    }
+  }
 }
 
 
@@ -61,7 +90,6 @@ function createElementInDom(name = "div", text = "", classElName = "") {
 // CONTAINERS \\
 const CLIENTS_ORDERS = [];
 const COOKS_ORDER = [];
-
 const COOKING_ORDERS = [];
 const DONE_ORDERS = [];
 const firstNames = [
@@ -132,21 +160,22 @@ const INGREDIENTS = [
 
 // /// The COOK \\\ \\
 
+
 function addCook() {
-  COOKS_ORDER.push(new CookGenerator());
-  if (COOKS_ORDER.length > 1) {
-    COOKS_ORDER[COOKS_ORDER.length - 1].on("cookIsFree", onCookFunction)
-  };
-  console.log(COOKS_ORDER.length);  
+  if (COOKS_ORDER.length < 6){
+    COOKS_ORDER.push(new CookGenerator());
+    COOKS_ORDER[COOKS_ORDER.length - 1].on("cookIsFree", onCookFunction);
+    console.log(COOKS_ORDER.length);  
+    createShefBox();
+  }
 }
 
 
 function deleteCook() {
-  COOKS_ORDER.forEach((cook) => {
-    if(cook.isFree === true){
-      COOKS_ORDER.pop();
-    }
-  });
+  if (COOKS_ORDER .length >= 1 && COOKS_ORDER[COOKS_ORDER.length - 1].isFree === true){
+    COOKS_ORDER.splice(COOKS_ORDER.length - 1, 1); 
+    removeShefBox();
+  } 
   console.log(COOKS_ORDER.length);
 }
 
@@ -167,9 +196,6 @@ function Cook(id, fullName) {
 
 const theCook = new Cook();
 const CookGenerator = inherit(EventEmmiter, theCook);
-
-
-
 
 
 // // // COOK END \\ \\ \\
@@ -221,7 +247,7 @@ function onClientFunction() {
   if (COOKS_ORDER.length !== 0) {
 
     for (let i = 0; i < COOKS_ORDER.length; i++) {
-      if (COOKS_ORDER[i].isFree === true && CLIENTS_ORDERS.length > 1){
+      if (COOKS_ORDER[i].isFree === true && CLIENTS_ORDERS.length >= 1){
 
         COOKS_ORDER[i].id = CLIENTS_ORDERS[0].id;
         COOKS_ORDER[i].order = CLIENTS_ORDERS[0].order;
@@ -232,10 +258,12 @@ function onClientFunction() {
         inDomClient();
         inDomCooking();
         console.log(COOKING_ORDERS[0].id);
-  
+        
         setTimeout(() => {
           COOKS_ORDER[i].emit("cookIsFree", i);
         }, COOKS_ORDER[i].cookingTime());
+
+
       }
     }
   }
@@ -362,7 +390,6 @@ function generatingOrder(INGREDIENTS) {
 
 // End of generated ORDER\\\\\\\
 
-// End of generated ORDER\\\\\\\
 
 // DOM \\
 function inDomClient() {
@@ -401,14 +428,3 @@ function returnDoneClient(id, fullName) {
   }
 }
 //END FUNCTION DONE CLIENT \\
-
-
-
-
-
-
-
-
-
-
-

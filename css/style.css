@@ -21,7 +21,9 @@
 
 .container-3 {
   display: flex;
-  justify-content: center;
+  justify-content: left;
+  width: 373px;
+  height: 50px;
 }
 
 .container-4 {
@@ -69,11 +71,11 @@
   text-align: center;
 }
 
-.shef {
-  height: 40px;
-  flex: 1;
-  margin: 10px;
-  width: 40px;
+.shefbox {
+  width: 30px;
+  height: 30px;
+  /* flex: 1; */
+  margin: 0 10px 0 0;
   order: 1;
   background-color: burlywood;
   border: 1px solid;
@@ -97,7 +99,6 @@
 
 .screen-3 {
   padding: 10px;
-  width: 30%;
   flex: 1;
   order: 3;
   justify-content: left;
